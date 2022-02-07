@@ -1,0 +1,30 @@
+{{- if .Values.client.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "superbapp.fullname" . }}-client
+spec:
+  type: {{ .Values.client.service.type }}
+  selector:
+{{/*    app: {{ include "superbapp.labels" . }}*/}}
+    app: superbapp-client
+    component: client
+    release: {{ .Release.Name }}
+  ports:
+    - name: client
+      protocol: TCP
+      port: {{ .Values.client.service.externalPort }}
+      {{- if and (eq .Values.client.service.type "NodePort") (.Values.client.service.nodePort.http) }}
+      nodePort: {{ .Values.client.service.nodePort.http }}
+      {{- end }}
+      targetPort: 80
+  {{- if eq .Values.client.service.type "LoadBalancer" }}
+  {{- if .Values.client.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.client.service.loadBalancerIP | quote }}
+  {{- end }}
+  {{- if .Values.client.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.client.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- end }}
+{{- end }}

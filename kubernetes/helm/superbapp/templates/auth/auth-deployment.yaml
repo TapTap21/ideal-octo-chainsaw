@@ -1,0 +1,63 @@
+{{- if .Values.auth.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "superbapp.fullname" . }}-auth
+spec:
+  replicas: {{ .Values.auth.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      ## multiple auth pods can safely run concurrently
+      maxSurge: 25%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: superbapp-auth
+      component: auth
+      release: {{ .Release.Name }}
+
+  template:
+    metadata:
+      labels:
+        app: superbapp-auth
+        component: auth
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: superbapp-auth
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: auth
+              containerPort: 3000
+              hostPort: 4000
+              protocol: TCP
+          image: taptap21/superbapp-auth:latest
+          env:
+            - name: MONGODB_URL
+              value: "mongodb://{{ .Values.mongodb.auth.rootUser }}:{{ .Values.mongodb.auth.rootPassword }}@{{ .Release.Name }}-mongodb.{{ .Release.Namespace}}.svc.cluster.local/superb"
+
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            exec:
+              command:
+                - "ash"
+                - "-c"
+                - "wget --no-verbose --tries=1 --spider http://localhost:3000/healthz"
+          livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            exec:
+              command:
+                - "ash"
+                - "-c"
+                - "wget --no-verbose --tries=1 --spider http://localhost:3000/healthz"
+
+
+{{- end }}

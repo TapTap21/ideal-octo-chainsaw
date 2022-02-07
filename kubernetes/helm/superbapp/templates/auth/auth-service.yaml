@@ -1,0 +1,30 @@
+{{- if .Values.auth.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "superbapp.fullname" . }}-auth
+spec:
+  type: {{ .Values.auth.service.type }}
+  selector:
+{{/*    app: {{ include "superbapp.labels" . }}*/}}
+    app: superbapp-auth
+    component: auth
+    release: {{ .Release.Name }}
+  ports:
+    - name: auth
+      protocol: TCP
+      port: {{ .Values.auth.service.externalPort }}
+      {{- if and (eq .Values.auth.service.type "NodePort") (.Values.auth.service.nodePort.http) }}
+      nodePort: {{ .Values.auth.service.nodePort.http }}
+      {{- end }}
+      targetPort: 3000
+  {{- if eq .Values.auth.service.type "LoadBalancer" }}
+  {{- if .Values.auth.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.auth.service.loadBalancerIP | quote }}
+  {{- end }}
+  {{- if .Values.auth.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.auth.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- end }}
+{{- end }}

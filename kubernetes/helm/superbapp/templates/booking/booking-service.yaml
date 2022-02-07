@@ -1,0 +1,30 @@
+{{- if .Values.booking.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "superbapp.fullname" . }}-booking
+spec:
+  type: {{ .Values.booking.service.type }}
+  selector:
+{{/*    app: {{ include "superbapp.labels" . }}*/}}
+    app: superbapp-booking
+    component: booking
+    release: {{ .Release.Name }}
+  ports:
+    - name: booking-grpc
+      protocol: TCP
+      port: {{ .Values.booking.service.externalPort }}
+      {{- if and (eq .Values.booking.service.type "NodePort") (.Values.booking.service.nodePort.http) }}
+      nodePort: {{ .Values.booking.service.nodePort.http }}
+      {{- end }}
+      targetPort: 3000
+  {{- if eq .Values.booking.service.type "LoadBalancer" }}
+  {{- if .Values.booking.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.booking.service.loadBalancerIP | quote }}
+  {{- end }}
+  {{- if .Values.booking.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.booking.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- end }}
+{{- end }}
