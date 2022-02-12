@@ -73,10 +73,10 @@ graphql:
     nodePort:
       http:
 
-  ingress:
-    annotations: { }
-    host: ""
-    path: ""
+#  ingress:
+#    annotations: { }
+#    host: ""
+#    path: ""
 
 
 client:
@@ -93,10 +93,10 @@ client:
     nodePort:
       http:
 
-  ingress:
-    annotations: { }
-    host: ""
-    path: ""
+#  ingress:
+#    annotations: { }
+#    host: ""
+#    path: ""
 
 imagePullSecrets: []
 nameOverride: "superbapp"
