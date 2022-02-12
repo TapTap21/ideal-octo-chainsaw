@@ -1,0 +1,26 @@
+{{- if  (.Values.auth.enabled) }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "superbapp.fullname" . }}-auth
+  {{- if .Values.auth.ingress.annotations }}
+  annotations:
+    {{- toYaml .Values.auth.ingress.annotations | nindent 4 }}
+  {{- end }}
+  labels:
+    app: superbapp-auth
+    component: auth
+    release: {{ .Release.Name }}
+spec:
+  rules:
+    - host: {{ .Values.auth.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.auth.ingress.path }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ include "superbapp.fullname" . }}-auth
+                port:
+                  name: auth
+{{- end }}

@@ -70,9 +70,9 @@ const subnetPrivate1c = new aws.ec2.Subnet(
 const mycluster = new eks.Cluster("my-cluster", {
     instanceType: "t3a.small",
     name: "my-cluster",
-    desiredCapacity: 2,
-    minSize: 1,
-    maxSize: 3,
+    desiredCapacity: 3,
+    minSize: 2,
+    maxSize: 4,
     subnetIds: [
         subnetPublic1a.id,
         subnetPublic1b.id,

@@ -7,21 +7,25 @@ auth:
 
   service:
     annotations: { }
-#    type: ClusterIP
-    type: NodePort
+    type: ClusterIP
     externalPort: 3000
     loadBalancerIP: ""
     loadBalancerSourceRanges: [ ]
-    nodePort:
-      http:
 
   ingress:
-    annotations: {}
-    host: ""
-    path: ""
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:282602319731:certificate/be94e5e2-a49a-4b31-af62-a109fa3cdbfd
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/subnets: subnet-0d592d8f8001b1ce4, subnet-02a2f09d26c67a342
+      alb.ingress.kubernetes.io/success-codes: 200,302
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/group.name: api
+      kubernetes.io/ingress.class: alb
+    host: "api.wernichbekker.com"
+    path: "/auth"
 
   mongodb:
-#    url: "mongodb://superb:superb@mongodb:27017/superb"
     url: "mongodb-1644241797.superbapp.svc.cluster.local"
     user: "superb"
     password: "superb"
@@ -97,7 +101,7 @@ serviceAccount:
 podAnnotations: {}
 
 podSecurityContext: {}
-  # fsGroup: 2000
+# fsGroup: 2000
 
 securityContext: {}
   # capabilities:
@@ -105,7 +109,7 @@ securityContext: {}
   #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
-  # runAsUser: 1000
+# runAsUser: 1000
 
 service:
   type: NodePort
@@ -116,7 +120,7 @@ ingress:
   className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  # kubernetes.io/tls-acme: "true"
   hosts:
     - host: chart-example.local
       paths:
@@ -137,7 +141,7 @@ resources: {}
   #   memory: 128Mi
   # requests:
   #   cpu: 100m
-  #   memory: 128Mi
+#   memory: 128Mi
 
 autoscaling:
   enabled: false
