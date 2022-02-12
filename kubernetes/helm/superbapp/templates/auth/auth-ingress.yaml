@@ -17,17 +17,10 @@ spec:
       http:
         paths:
           - path: {{ .Values.auth.ingress.path }}
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: {{ include "superbapp.fullname" . }}-auth
                 port:
                   name: auth
-          - path: {{ .Values.auth.ingress.path }}
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ include "superbapp.fullname" . }}-auth
-                port:
-                  name: auth/
 {{- end }}
