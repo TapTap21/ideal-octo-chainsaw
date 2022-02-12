@@ -46,7 +46,8 @@ booking:
     annotations: { }
     #    type: ClusterIP
     type: NodePort
-    externalPort: 3100
+    externalHttpPort: 3101
+    externalGrpcPort: 3100
     loadBalancerIP: ""
     loadBalancerSourceRanges: [ ]
     nodePort:
@@ -55,7 +56,8 @@ booking:
   ingress:
     annotations: { }
     host: ""
-    path: ""
+    grpcPath: ""
+    httpPath: ""
 
 graphql:
   enabled: true

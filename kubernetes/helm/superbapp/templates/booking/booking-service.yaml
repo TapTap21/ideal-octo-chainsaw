@@ -13,11 +13,18 @@ spec:
   ports:
     - name: booking-grpc
       protocol: TCP
-      port: {{ .Values.booking.service.externalPort }}
+      port: {{ .Values.booking.service.externalGrpcPort }}
       {{- if and (eq .Values.booking.service.type "NodePort") (.Values.booking.service.nodePort.http) }}
       nodePort: {{ .Values.booking.service.nodePort.http }}
       {{- end }}
       targetPort: 3000
+    - name: booking-http
+      protocol: TCP
+      port: {{ .Values.booking.service.externalHttpPort }}
+        {{- if and (eq .Values.booking.service.type "NodePort") (.Values.booking.service.nodePort.http) }}
+      nodePort: {{ .Values.booking.service.nodePort.http }}
+        {{- end }}
+      targetPort: 3001
   {{- if eq .Values.booking.service.type "LoadBalancer" }}
   {{- if .Values.booking.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.booking.service.loadBalancerIP | quote }}

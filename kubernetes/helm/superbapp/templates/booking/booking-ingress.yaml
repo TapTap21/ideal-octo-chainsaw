@@ -16,11 +16,18 @@ spec:
     - host: {{ .Values.booking.ingress.host }}
       http:
         paths:
-          - path: {{ .Values.booking.ingress.path }}
+          - path: {{ .Values.booking.ingress.httpPath }}
             pathType: Prefix
             backend:
               service:
                 name: {{ include "superbapp.fullname" . }}-booking
                 port:
                   name: booking-http
+          - path: {{ .Values.booking.ingress.grpcPath }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "superbapp.fullname" . }}-booking
+                port:
+                  name: booking-grpc
 {{- end }}

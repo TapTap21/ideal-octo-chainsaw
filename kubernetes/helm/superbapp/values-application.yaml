@@ -49,7 +49,8 @@ booking:
   service:
     annotations: { }
     type: ClusterIP
-    externalPort: 3100
+    externalHttpPort: 3101
+    externalGrpcPort: 3100
     loadBalancerIP: ""
     loadBalancerSourceRanges: [ ]
 
@@ -64,7 +65,8 @@ booking:
       alb.ingress.kubernetes.io/group.name: api
       kubernetes.io/ingress.class: alb
     host: "api.wernichbekker.com"
-    path: "/booking"
+    grpcPath: "/bookinggrpc"
+    httpPath: "/booking"
 
 graphql:
   enabled: true
