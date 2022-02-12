@@ -22,5 +22,5 @@ spec:
               service:
                 name: {{ include "superbapp.fullname" . }}-booking
                 port:
-                  name: booking
+                  name: booking-http
 {{- end }}
