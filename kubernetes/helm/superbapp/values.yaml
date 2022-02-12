@@ -52,6 +52,11 @@ booking:
     nodePort:
       http:
 
+  ingress:
+    annotations: { }
+    host: ""
+    path: ""
+
 graphql:
   enabled: true
   replicas: 1
@@ -65,6 +70,11 @@ graphql:
     loadBalancerSourceRanges: [ ]
     nodePort:
       http:
+
+  ingress:
+    annotations: { }
+    host: ""
+    path: ""
 
 
 client:
@@ -80,6 +90,11 @@ client:
     loadBalancerSourceRanges: [ ]
     nodePort:
       http:
+
+  ingress:
+    annotations: { }
+    host: ""
+    path: ""
 
 imagePullSecrets: []
 nameOverride: "superbapp"

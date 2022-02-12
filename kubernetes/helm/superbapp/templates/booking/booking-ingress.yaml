@@ -1,0 +1,26 @@
+{{- if  (.Values.booking.enabled) }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "superbapp.fullname" . }}-booking
+  {{- if .Values.booking.ingress.annotations }}
+  annotations:
+    {{- toYaml .Values.booking.ingress.annotations | nindent 4 }}
+  {{- end }}
+  labels:
+    app: superbapp-booking
+    component: booking
+    release: {{ .Release.Name }}
+spec:
+  rules:
+    - host: {{ .Values.booking.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.booking.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "superbapp.fullname" . }}-booking
+                port:
+                  name: booking
+{{- end }}

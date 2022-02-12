@@ -48,13 +48,23 @@ booking:
 
   service:
     annotations: { }
-    #    type: ClusterIP
-    type: NodePort
+    type: ClusterIP
     externalPort: 3100
     loadBalancerIP: ""
     loadBalancerSourceRanges: [ ]
-    nodePort:
-      http:
+
+  ingress:
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:282602319731:certificate/be94e5e2-a49a-4b31-af62-a109fa3cdbfd
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/subnets: subnet-0d592d8f8001b1ce4, subnet-02a2f09d26c67a342
+      alb.ingress.kubernetes.io/success-codes: 200,302
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/group.name: api
+      kubernetes.io/ingress.class: alb
+    host: "api.wernichbekker.com"
+    path: "/booking"
 
 graphql:
   enabled: true
