@@ -13,18 +13,18 @@ spec:
   ports:
     - name: graphql
       protocol: TCP
-      port: {{ .Values.booking.service.externalPort }}
-      {{- if and (eq .Values.booking.service.type "NodePort") (.Values.booking.service.nodePort.http) }}
-      nodePort: {{ .Values.booking.service.nodePort.http }}
+      port: {{ .Values.graphql.service.externalPort }}
+      {{- if and (eq .Values.graphql.service.type "NodePort") (.Values.graphql.service.nodePort.http) }}
+      nodePort: {{ .Values.graphql.service.nodePort.http }}
       {{- end }}
       targetPort: 3000
-  {{- if eq .Values.booking.service.type "LoadBalancer" }}
-  {{- if .Values.booking.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.booking.service.loadBalancerIP | quote }}
+  {{- if eq .Values.graphql.service.type "LoadBalancer" }}
+  {{- if .Values.graphql.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.graphql.service.loadBalancerIP | quote }}
   {{- end }}
-  {{- if .Values.booking.service.loadBalancerSourceRanges }}
+  {{- if .Values.graphql.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-    {{- toYaml .Values.booking.service.loadBalancerSourceRanges | nindent 4 }}
+    {{- toYaml .Values.graphql.service.loadBalancerSourceRanges | nindent 4 }}
   {{- end }}
   {{- end }}
 {{- end }}
