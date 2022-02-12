@@ -29,5 +29,5 @@ spec:
               service:
                 name: {{ include "superbapp.fullname" . }}-auth
                 port:
-                  name: auth/*
+                  name: auth/
 {{- end }}
