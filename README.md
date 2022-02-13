@@ -50,7 +50,7 @@ Below a simplified view of the deployed app can be viewed. For this application 
 
 [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) is a declarative, continuous delivery, [GitOps](https://about.gitlab.com/topics/gitops/) tool that has been adopted into the [CNCF](https://www.cncf.io/). For this project I used ArgoCD to declaratively manage the deployments to Kubernetes.
 
-The superbapp helm chart is templated and deployed bu ArgoCD. As GitOps principles dictate, argo watched the repo for updates to the [values file](/kubernetes/helm/superbapp/values-application.yaml). Each time an update is made to the helm chart or values file, ArgoCD attempts to sync the declared state to the observed state in Kubernetes. ArgoCD allows for auto and manual rollbacks in the event of failure.
+The superbapp helm chart is templated and deployed by ArgoCD. As GitOps principles dictate, argo watched the repo for updates to the [values file](/kubernetes/helm/superbapp/values-application.yaml). Each time an update is made to the helm chart or values file, ArgoCD attempts to sync the declared state to the observed state in Kubernetes. ArgoCD allows for auto and manual rollbacks in the event of failure.
 
 ## Endpoints
 The relevant endpoints are listed below:
