@@ -38,7 +38,7 @@ spec:
             - name: BOOKING_SERVICE_URI
               value: '{{ .Release.Name }}-booking.superbapp.svc.cluster.local'
             - name: AUTH_SERVICE_URI
-              value: '{{ .Release.Name }}-booking.superbapp.svc.cluster.local'
+              value: '{{ .Release.Name }}-auth.superbapp.svc.cluster.local'
 
           readinessProbe:
             initialDelaySeconds: 10

@@ -70,7 +70,7 @@ const subnetPrivate1c = new aws.ec2.Subnet(
 const mycluster = new eks.Cluster("my-cluster", {
     instanceType: "t3a.small",
     name: "my-cluster",
-    desiredCapacity: 3,
+    desiredCapacity: 4,
     minSize: 2,
     maxSize: 4,
     subnetIds: [
@@ -380,116 +380,116 @@ const bucket = new aws.s3.Bucket("bucket", {
     },
 });
 const s3OriginId = "myS3Origin";
-const s3Distribution = new aws.cloudfront.Distribution("s3Distribution", {
-    origins: [{
-        domainName: bucket.bucketRegionalDomainName,
-        originId: s3OriginId,
-        s3OriginConfig: {
-            originAccessIdentity: "origin-access-identity/cloudfront/ABCDEFG1234567",
-        },
-    }],
-    enabled: true,
-    isIpv6Enabled: true,
-    comment: "frontend.wernichbekker.com",
-    defaultRootObject: "index.html",
-    // loggingConfig: {
-    //     includeCookies: false,
-    //     bucket: "mylogs.s3.amazonaws.com",
-    //     prefix: "myprefix",
-    // },
-    aliases: [
-        "frontend.wernichbekker.com",
-    ],
-    defaultCacheBehavior: {
-        allowedMethods: [
-            "DELETE",
-            "GET",
-            "HEAD",
-            "OPTIONS",
-            "PATCH",
-            "POST",
-            "PUT",
-        ],
-        cachedMethods: [
-            "GET",
-            "HEAD",
-        ],
-        targetOriginId: s3OriginId,
-        forwardedValues: {
-            queryString: false,
-            cookies: {
-                forward: "none",
-            },
-        },
-        viewerProtocolPolicy: "allow-all",
-        minTtl: 0,
-        defaultTtl: 3600,
-        maxTtl: 86400,
-    },
-    orderedCacheBehaviors: [
-        {
-            pathPattern: "/content/immutable/*",
-            allowedMethods: [
-                "GET",
-                "HEAD",
-                "OPTIONS",
-            ],
-            cachedMethods: [
-                "GET",
-                "HEAD",
-                "OPTIONS",
-            ],
-            targetOriginId: s3OriginId,
-            forwardedValues: {
-                queryString: false,
-                headers: ["Origin"],
-                cookies: {
-                    forward: "none",
-                },
-            },
-            minTtl: 0,
-            defaultTtl: 86400,
-            maxTtl: 31536000,
-            compress: true,
-            viewerProtocolPolicy: "redirect-to-https",
-        },
-        {
-            pathPattern: "/content/*",
-            allowedMethods: [
-                "GET",
-                "HEAD",
-                "OPTIONS",
-            ],
-            cachedMethods: [
-                "GET",
-                "HEAD",
-            ],
-            targetOriginId: s3OriginId,
-            forwardedValues: {
-                queryString: false,
-                cookies: {
-                    forward: "none",
-                },
-            },
-            minTtl: 0,
-            defaultTtl: 3600,
-            maxTtl: 86400,
-            compress: true,
-            viewerProtocolPolicy: "redirect-to-https",
-        },
-    ],
-    priceClass: "PriceClass_200",
-    restrictions: {
-        geoRestriction: {
-            restrictionType: "none",
-        },
-    },
-    tags: {
-        Environment: "production",
-    },
-    viewerCertificate: {
-        acmCertificateArn: cert.arn,
-        sslSupportMethod:"sni-only",
-    },
-});
+// const s3Distribution = new aws.cloudfront.Distribution("s3Distribution", {
+//     origins: [{
+//         domainName: bucket.bucketRegionalDomainName,
+//         originId: s3OriginId,
+//         s3OriginConfig: {
+//             originAccessIdentity: "origin-access-identity/cloudfront/ABCDEFG1234567",
+//         },
+//     }],
+//     enabled: true,
+//     isIpv6Enabled: true,
+//     comment: "frontend.wernichbekker.com",
+//     defaultRootObject: "index.html",
+//     // loggingConfig: {
+//     //     includeCookies: false,
+//     //     bucket: "mylogs.s3.amazonaws.com",
+//     //     prefix: "myprefix",
+//     // },
+//     aliases: [
+//         "frontend.wernichbekker.com",
+//     ],
+//     defaultCacheBehavior: {
+//         allowedMethods: [
+//             "DELETE",
+//             "GET",
+//             "HEAD",
+//             "OPTIONS",
+//             "PATCH",
+//             "POST",
+//             "PUT",
+//         ],
+//         cachedMethods: [
+//             "GET",
+//             "HEAD",
+//         ],
+//         targetOriginId: s3OriginId,
+//         forwardedValues: {
+//             queryString: false,
+//             cookies: {
+//                 forward: "none",
+//             },
+//         },
+//         viewerProtocolPolicy: "allow-all",
+//         minTtl: 0,
+//         defaultTtl: 3600,
+//         maxTtl: 86400,
+//     },
+//     orderedCacheBehaviors: [
+//         {
+//             pathPattern: "/content/immutable/*",
+//             allowedMethods: [
+//                 "GET",
+//                 "HEAD",
+//                 "OPTIONS",
+//             ],
+//             cachedMethods: [
+//                 "GET",
+//                 "HEAD",
+//                 "OPTIONS",
+//             ],
+//             targetOriginId: s3OriginId,
+//             forwardedValues: {
+//                 queryString: false,
+//                 headers: ["Origin"],
+//                 cookies: {
+//                     forward: "none",
+//                 },
+//             },
+//             minTtl: 0,
+//             defaultTtl: 86400,
+//             maxTtl: 31536000,
+//             compress: true,
+//             viewerProtocolPolicy: "redirect-to-https",
+//         },
+//         {
+//             pathPattern: "/content/*",
+//             allowedMethods: [
+//                 "GET",
+//                 "HEAD",
+//                 "OPTIONS",
+//             ],
+//             cachedMethods: [
+//                 "GET",
+//                 "HEAD",
+//             ],
+//             targetOriginId: s3OriginId,
+//             forwardedValues: {
+//                 queryString: false,
+//                 cookies: {
+//                     forward: "none",
+//                 },
+//             },
+//             minTtl: 0,
+//             defaultTtl: 3600,
+//             maxTtl: 86400,
+//             compress: true,
+//             viewerProtocolPolicy: "redirect-to-https",
+//         },
+//     ],
+//     priceClass: "PriceClass_200",
+//     restrictions: {
+//         geoRestriction: {
+//             restrictionType: "none",
+//         },
+//     },
+//     tags: {
+//         Environment: "production",
+//     },
+//     viewerCertificate: {
+//         acmCertificateArn: cert.arn,
+//         sslSupportMethod:"sni-only",
+//     },
+// });
 
