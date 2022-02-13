@@ -3,9 +3,9 @@ name: booking-production-build
 on:
   push:
     branches: [ main ]
-    paths:
-      - src/booking/**
-      - src/proto/**
+#    paths:
+#      - src/booking/**
+#      - src/proto/**
 
 jobs:
   build:
@@ -31,6 +31,12 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: taptap21/superbapp-booking
+          flavor: |
+            latest=auto
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }} 
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
