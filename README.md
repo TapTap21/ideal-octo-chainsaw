@@ -21,7 +21,7 @@ All the AWS resources in this project is provisioned and declaratively implement
 
 For this application the Pulumi code was kept as simple as possible to demonstrate idea of the design, thus it does not contain a complex file structure as would be advised by [Pulumi best practice](https://www.pulumi.com/docs/guides/)
 
-The resource graph for all the resources created and managed by Pulumi can be viewer [here](frontend.wernichbekker.com/resource_graph/pulumi-final.html).
+The resource graph for all the resources created and managed by Pulumi can be viewer [here](https://frontend.wernichbekker.com/resource_graph/pulumi-final.html).
 
 ### Infrastructure overview
 
