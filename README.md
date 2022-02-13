@@ -11,6 +11,17 @@ Superb is growing. Today we have 4 applications organized in a [monorepo](https:
 - **[graphql](./graphql/)**: This API is our border service. It make the bridge between frontend applications and our microservices.
 - **[client](./client/)**: This API is a frontend app used to manage bookings.
 
+## Infrastructure design
+
+The infrastructure is mainly deployed in AWS, with some GitHub resources and Dockerhub repositories.
+
+# Pulumi
+
+All the AWS resources in this project is provisioned and declaratively implemented in the `infra` directory using [Pulumi](https://pulumi.com). Pulumi is an infrastructure as code (IaC) tool that uses an SDK based approach to infrastructure.
+
+For this application the Pulumi code was kept as simple as possible to demonstrate idea of the design, thus it does not contain a complex file structure as would be advised by [Pulumi best practice](https://www.pulumi.com/docs/guides/)
+
+The resource graph for all the resources created and managed by Pulumi can be viewer [here](content/resource_graph/pulumi-final.html)
 ## Goals
 
 As a developer, I know the best practices to build a good product, but I don't know what is the best way to deliver the applications I've coded.
