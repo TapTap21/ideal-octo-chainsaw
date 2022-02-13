@@ -1,0 +1,61 @@
+---
+# Source: superbapp/templates/auth/auth-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superbapp-chart-auth
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      ## multiple auth pods can safely run concurrently
+      maxSurge: 25%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: superbapp-auth
+      component: auth
+      release: RELEASE-NAME
+
+  template:
+    metadata:
+      labels:
+        app: superbapp-auth
+        component: auth
+        release: RELEASE-NAME
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: superbapp-auth
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: auth
+              containerPort: 3000
+              hostPort: 4000
+              protocol: TCP
+          image: taptap21/superbapp-auth:latest
+          env:
+            - name: MONGODB_URL
+              value: "mongodb://superb:superb@RELEASE-NAME-mongodb.default.svc.cluster.local"
+
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            exec:
+              command:
+                - "ash"
+                - "-c"
+                - "wget --no-verbose --tries=1 --spider http://localhost:3000/healthz"
+          livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            exec:
+              command:
+                - "ash"
+                - "-c"
+                - "wget --no-verbose --tries=1 --spider http://localhost:3000/healthz"

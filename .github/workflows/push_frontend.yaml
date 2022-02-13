@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - src/client/**
+      - content/resource_graph/**
 
 jobs:
   build:
@@ -42,6 +43,7 @@ jobs:
           AWS_BUCKET: ${{ secrets.AWS_BUCKET}}
         run: |
           aws s3 sync build/ $AWS_BUCKET/ --delete
+          aws s3 sync /content/resource_graph/ $AWS_BUCKET/ --delete
 
 #      - name: Slack Notification
 #        uses: rtCamp/action-slack-notify@v2.0.2

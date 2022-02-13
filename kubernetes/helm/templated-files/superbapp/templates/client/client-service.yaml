@@ -1,0 +1,18 @@
+---
+# Source: superbapp/templates/client/client-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: superbapp-chart-client
+spec:
+  type: ClusterIP
+  selector:
+
+    app: superbapp-client
+    component: client
+    release: RELEASE-NAME
+  ports:
+    - name: client
+      protocol: TCP
+      port: 3300
+      targetPort: 80

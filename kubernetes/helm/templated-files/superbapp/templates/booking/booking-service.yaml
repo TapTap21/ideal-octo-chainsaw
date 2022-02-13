@@ -1,0 +1,22 @@
+---
+# Source: superbapp/templates/booking/booking-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: superbapp-chart-booking
+spec:
+  type: ClusterIP
+  selector:
+
+    app: superbapp-booking
+    component: booking
+    release: RELEASE-NAME
+  ports:
+    - name: booking-grpc
+      protocol: TCP
+      port: 3100
+      targetPort: 3000
+    - name: booking-http
+      protocol: TCP
+      port: 3101
+      targetPort: 3001

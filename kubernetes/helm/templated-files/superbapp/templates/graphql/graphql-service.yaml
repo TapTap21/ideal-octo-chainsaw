@@ -1,0 +1,18 @@
+---
+# Source: superbapp/templates/graphql/graphql-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: superbapp-chart-graphql
+spec:
+  type: ClusterIP
+  selector:
+
+    app: superbapp-graphql
+    component: graphql
+    release: RELEASE-NAME
+  ports:
+    - name: graphql
+      protocol: TCP
+      port: 3200
+      targetPort: 3000
