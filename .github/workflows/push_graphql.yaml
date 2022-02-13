@@ -3,9 +3,9 @@ name: graphql-production-build
 on:
   push:
     branches: [ main ]
-#    paths:
-#      - src/graphql/**
-#      - src/proto/**
+    paths:
+      - src/graphql/**
+      - src/proto/**
 
 jobs:
   build:
