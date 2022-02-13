@@ -10,7 +10,7 @@ services:
     ports:
       - 4000:3000/tcp
     environment:
-      MONGODB_URL: mongodb://superb:superb@mongodb:27017/superb
+      MONGODB_URL: mongodb://superb:superb@mongodb:27017
     depends_on:
       - mongodb
 
@@ -25,7 +25,7 @@ services:
       - 4100:3000/tcp
       - 4101:3000/tcp
     environment:
-      MONGODB_URL: mongodb://superb:superb@mongodb:27017/superb
+      MONGODB_URL: mongodb://superb:superb@mongodb:27017
     depends_on:
       - mongodb
 
@@ -61,7 +61,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: superb
       MONGO_INITDB_ROOT_PASSWORD: superb
-      MONGO_INITDB_DATABASE: superb
+#      MONGO_INITDB_DATABASE: superb
     restart: unless-stopped
     volumes:
       - mongodbdata:/data/db

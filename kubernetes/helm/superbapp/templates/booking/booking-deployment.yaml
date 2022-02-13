@@ -40,7 +40,7 @@ spec:
           image: taptap21/superbapp-booking:latest
           env:
             - name: MONGODB_URL
-              value: "mongodb://{{ .Values.mongodb.auth.rootUser }}:{{ .Values.mongodb.auth.rootPassword }}@{{ .Release.Name }}-mongodb/superb"
+              value: "mongodb://{{ .Values.mongodb.auth.rootUser }}:{{ .Values.mongodb.auth.rootPassword }}@{{ .Release.Name }}-mongodb"
 
           readinessProbe:
             initialDelaySeconds: 10

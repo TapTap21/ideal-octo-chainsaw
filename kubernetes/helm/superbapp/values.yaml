@@ -16,6 +16,7 @@ auth:
       http:
 
   ingress:
+    enabled: false
     annotations: {}
     host: ""
     path: ""
@@ -54,6 +55,7 @@ booking:
       http:
 
   ingress:
+    enabled: false
     annotations: { }
     host: ""
     grpcPath: ""
@@ -74,6 +76,7 @@ graphql:
       http:
 
   ingress:
+    enabled: true
     annotations: { }
     host: ""
     path: ""
@@ -94,6 +97,7 @@ client:
       http:
 
   ingress:
+    enabled: false
     annotations: { }
     host: ""
     path: ""

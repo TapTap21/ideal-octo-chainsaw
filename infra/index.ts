@@ -352,48 +352,16 @@ const albingresscntlr = new k8s.helm.v3.Chart(
     {provider: mycluster.provider}
 );
 
-// const argoNamespace = new k8s.core.v1.Namespace("argocd-namespace", {
-//     metadata: {
-//         namespace: "argocd",
-//         name: "argocd"
-//     }
-// }, {provider: cluster.provider})
-//
-//
-// const argocd = new k8s.helm.v3.Release(
-//     "argocd",
-//     {
-//         chart: "argo-cd",
-//         version: "3.0.4",
-//         namespace: argoNamespace.metadata.name,
-//         repositoryOpts: {
-//             repo: "https://charts.bitnami.com/bitnami"
-//         },
-//         valueYamlFiles: [new FileAsset("argo/values.yml")],
-//     },
-//     {
-//         provider: cluster.provider
-//     }
-// )
 
 export const kubeconfig = mycluster.kubeconfig;
 
-// const cert = new aws.acm.Certificate("cert", {
-//     domainName: "*.wernichbekker.com",
-//     tags: {
-//         Environment: "test",
-//     },
-//     validationMethod: "DNS",
-// });
-
-
-// const coreDnsAddon = new aws.eks.Addon(
-//     "core_dns_addon",
-//     {
-//         addonName:"coredns",
-//         clusterName: mycluster.eksCluster.name
-//     }
-// )
+const cert = new aws.acm.Certificate("cert", {
+    domainName: "*.wernichbekker.com",
+    tags: {
+        Environment: "test",
+    },
+    validationMethod: "DNS",
+});
 
 
 const kubeProxyAddon = new aws.eks.Addon(
@@ -404,11 +372,124 @@ const kubeProxyAddon = new aws.eks.Addon(
     }
 )
 
-// const vpcCniAddon = new aws.eks.Addon(
-//     "vpc_cni_addon",
-//     {
-//         addonName:"vpc-cni",
-//         clusterName: mycluster.eksCluster.name
-//     }
-// )
+
+const bucket = new aws.s3.Bucket("bucket", {
+    acl: "private",
+    tags: {
+        Name: "My bucket",
+    },
+});
+const s3OriginId = "myS3Origin";
+const s3Distribution = new aws.cloudfront.Distribution("s3Distribution", {
+    origins: [{
+        domainName: bucket.bucketRegionalDomainName,
+        originId: s3OriginId,
+        s3OriginConfig: {
+            originAccessIdentity: "origin-access-identity/cloudfront/ABCDEFG1234567",
+        },
+    }],
+    enabled: true,
+    isIpv6Enabled: true,
+    comment: "frontend.wernichbekker.com",
+    defaultRootObject: "index.html",
+    // loggingConfig: {
+    //     includeCookies: false,
+    //     bucket: "mylogs.s3.amazonaws.com",
+    //     prefix: "myprefix",
+    // },
+    aliases: [
+        "frontend.wernichbekker.com",
+    ],
+    defaultCacheBehavior: {
+        allowedMethods: [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "PATCH",
+            "POST",
+            "PUT",
+        ],
+        cachedMethods: [
+            "GET",
+            "HEAD",
+        ],
+        targetOriginId: s3OriginId,
+        forwardedValues: {
+            queryString: false,
+            cookies: {
+                forward: "none",
+            },
+        },
+        viewerProtocolPolicy: "allow-all",
+        minTtl: 0,
+        defaultTtl: 3600,
+        maxTtl: 86400,
+    },
+    orderedCacheBehaviors: [
+        {
+            pathPattern: "/content/immutable/*",
+            allowedMethods: [
+                "GET",
+                "HEAD",
+                "OPTIONS",
+            ],
+            cachedMethods: [
+                "GET",
+                "HEAD",
+                "OPTIONS",
+            ],
+            targetOriginId: s3OriginId,
+            forwardedValues: {
+                queryString: false,
+                headers: ["Origin"],
+                cookies: {
+                    forward: "none",
+                },
+            },
+            minTtl: 0,
+            defaultTtl: 86400,
+            maxTtl: 31536000,
+            compress: true,
+            viewerProtocolPolicy: "redirect-to-https",
+        },
+        {
+            pathPattern: "/content/*",
+            allowedMethods: [
+                "GET",
+                "HEAD",
+                "OPTIONS",
+            ],
+            cachedMethods: [
+                "GET",
+                "HEAD",
+            ],
+            targetOriginId: s3OriginId,
+            forwardedValues: {
+                queryString: false,
+                cookies: {
+                    forward: "none",
+                },
+            },
+            minTtl: 0,
+            defaultTtl: 3600,
+            maxTtl: 86400,
+            compress: true,
+            viewerProtocolPolicy: "redirect-to-https",
+        },
+    ],
+    priceClass: "PriceClass_200",
+    restrictions: {
+        geoRestriction: {
+            restrictionType: "none",
+        },
+    },
+    tags: {
+        Environment: "production",
+    },
+    viewerCertificate: {
+        acmCertificateArn: cert.arn,
+        sslSupportMethod:"sni-only",
+    },
+});
 

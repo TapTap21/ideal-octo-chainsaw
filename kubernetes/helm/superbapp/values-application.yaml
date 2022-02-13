@@ -13,6 +13,7 @@ auth:
     loadBalancerSourceRanges: [ ]
 
   ingress:
+    enabled: true
     annotations:
       alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:282602319731:certificate/be94e5e2-a49a-4b31-af62-a109fa3cdbfd
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
@@ -55,6 +56,7 @@ booking:
     loadBalancerSourceRanges: [ ]
 
   ingress:
+    enabled: true
     annotations:
       alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:282602319731:certificate/be94e5e2-a49a-4b31-af62-a109fa3cdbfd
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
@@ -80,6 +82,7 @@ graphql:
     loadBalancerSourceRanges: [ ]
 
   ingress:
+    enabled: true
     annotations:
       alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:282602319731:certificate/be94e5e2-a49a-4b31-af62-a109fa3cdbfd
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
@@ -105,6 +108,7 @@ client:
     loadBalancerSourceRanges: [ ]
 
   ingress:
+    enabled: true
     annotations:
       alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:282602319731:certificate/be94e5e2-a49a-4b31-af62-a109fa3cdbfd
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
