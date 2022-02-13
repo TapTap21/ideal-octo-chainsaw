@@ -3,9 +3,9 @@ name: booking-production-build
 on:
   push:
     branches: [ main ]
-#    paths:
-#      - src/booking/**
-#      - src/proto/**
+    paths:
+      - src/booking/**
+      - src/proto/**
 
 jobs:
   build:

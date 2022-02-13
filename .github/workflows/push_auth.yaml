@@ -27,6 +27,9 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: taptap21/superbapp-auth
+          tags: |
+            type=sha
+            type=ref,event=branch
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
