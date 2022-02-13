@@ -1,0 +1,26 @@
+{{- if  (.Values.graphql.enabled) }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "superbapp.fullname" . }}-graphql
+  {{- if .Values.graphql.ingress.annotations }}
+  annotations:
+    {{- toYaml .Values.graphql.ingress.annotations | nindent 4 }}
+  {{- end }}
+  labels:
+    app: superbapp-graphql
+    component: graphql
+    release: {{ .Release.Name }}
+spec:
+  rules:
+    - host: {{ .Values.graphql.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.graphql.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "superbapp.fullname" . }}-graphql
+                port:
+                  name: graphql
+{{- end }}

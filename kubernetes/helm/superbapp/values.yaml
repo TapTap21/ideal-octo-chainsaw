@@ -73,10 +73,10 @@ graphql:
     nodePort:
       http:
 
-#  ingress:
-#    annotations: { }
-#    host: ""
-#    path: ""
+  ingress:
+    annotations: { }
+    host: ""
+    path: ""
 
 
 client:
