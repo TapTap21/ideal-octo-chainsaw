@@ -89,8 +89,8 @@ graphql:
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/group.name: api
       kubernetes.io/ingress.class: alb
-    host: "api.wernichbekker.com"
-    path: "/graphql"
+    host: "graphql.wernichbekker.com"
+    path: "/"
 
 
 client:
