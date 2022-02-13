@@ -372,124 +372,185 @@ const kubeProxyAddon = new aws.eks.Addon(
     }
 )
 
+// s3_policy = aws.iam.get_policy_document(
+//     statements=[
+//         GetPolicyDocumentStatementArgs(
+//             actions=["s3:GetObject"],
+//             resources=[f"arn:aws:s3:::{app_dev_bucket_name}/*"],
+//             principals=[
+//                 GetPolicyDocumentStatementPrincipalArgs(
+//                     type="AWS",
+//                     identifiers=[dev_oai.iam_arn],
+//                 )
+//             ],
+//         )
+//     ]
+// )
+//
+// bucket_policy = BucketPolicy(
+//     "oai_bucket", bucket=app_dev_vcomp.id, policy=s3_policy.json
+// )
+
+
+const s3Oia = new aws.cloudfront.OriginAccessIdentity("Dev OAI", {
+    comment: "Dev cloudfront OAI"
+})
 
 const bucket = new aws.s3.Bucket("bucket", {
+    bucket: "frontend.wernichbekker.com",
     acl: "private",
     tags: {
         Name: "My bucket",
     },
 });
+
+const s3Policy = aws.iam.getPolicyDocumentOutput({
+    statements: [{
+        actions:["s3:GetObject"],
+        resources:[`arn:aws:s3:::frontend.wernichbekker.com/*`],
+        principals:[
+            {
+                type:"AWS",
+                identifiers:[s3Oia.iamArn]
+            }
+        ]
+    }]
+})
+
+const bucketPolicy = new aws.s3.BucketPolicy(
+    "oai_bucket",
+    {
+        bucket:bucket.id,
+        policy: s3Policy.apply(s3Policy => s3Policy.json)
+    }
+)
+
 const s3OriginId = "myS3Origin";
-// const s3Distribution = new aws.cloudfront.Distribution("s3Distribution", {
-//     origins: [{
-//         domainName: bucket.bucketRegionalDomainName,
-//         originId: s3OriginId,
-//         s3OriginConfig: {
-//             originAccessIdentity: "origin-access-identity/cloudfront/ABCDEFG1234567",
-//         },
-//     }],
-//     enabled: true,
-//     isIpv6Enabled: true,
-//     comment: "frontend.wernichbekker.com",
-//     defaultRootObject: "index.html",
-//     // loggingConfig: {
-//     //     includeCookies: false,
-//     //     bucket: "mylogs.s3.amazonaws.com",
-//     //     prefix: "myprefix",
-//     // },
-//     aliases: [
-//         "frontend.wernichbekker.com",
-//     ],
-//     defaultCacheBehavior: {
-//         allowedMethods: [
-//             "DELETE",
-//             "GET",
-//             "HEAD",
-//             "OPTIONS",
-//             "PATCH",
-//             "POST",
-//             "PUT",
-//         ],
-//         cachedMethods: [
-//             "GET",
-//             "HEAD",
-//         ],
-//         targetOriginId: s3OriginId,
-//         forwardedValues: {
-//             queryString: false,
-//             cookies: {
-//                 forward: "none",
-//             },
-//         },
-//         viewerProtocolPolicy: "allow-all",
-//         minTtl: 0,
-//         defaultTtl: 3600,
-//         maxTtl: 86400,
-//     },
-//     orderedCacheBehaviors: [
-//         {
-//             pathPattern: "/content/immutable/*",
-//             allowedMethods: [
-//                 "GET",
-//                 "HEAD",
-//                 "OPTIONS",
-//             ],
-//             cachedMethods: [
-//                 "GET",
-//                 "HEAD",
-//                 "OPTIONS",
-//             ],
-//             targetOriginId: s3OriginId,
-//             forwardedValues: {
-//                 queryString: false,
-//                 headers: ["Origin"],
-//                 cookies: {
-//                     forward: "none",
-//                 },
-//             },
-//             minTtl: 0,
-//             defaultTtl: 86400,
-//             maxTtl: 31536000,
-//             compress: true,
-//             viewerProtocolPolicy: "redirect-to-https",
-//         },
-//         {
-//             pathPattern: "/content/*",
-//             allowedMethods: [
-//                 "GET",
-//                 "HEAD",
-//                 "OPTIONS",
-//             ],
-//             cachedMethods: [
-//                 "GET",
-//                 "HEAD",
-//             ],
-//             targetOriginId: s3OriginId,
-//             forwardedValues: {
-//                 queryString: false,
-//                 cookies: {
-//                     forward: "none",
-//                 },
-//             },
-//             minTtl: 0,
-//             defaultTtl: 3600,
-//             maxTtl: 86400,
-//             compress: true,
-//             viewerProtocolPolicy: "redirect-to-https",
-//         },
-//     ],
-//     priceClass: "PriceClass_200",
-//     restrictions: {
-//         geoRestriction: {
-//             restrictionType: "none",
-//         },
-//     },
-//     tags: {
-//         Environment: "production",
-//     },
-//     viewerCertificate: {
-//         acmCertificateArn: cert.arn,
-//         sslSupportMethod:"sni-only",
-//     },
-// });
+
+const usAwsProvider = new aws.Provider("aws-pulumi-provider-us-east-1", {
+    region: "us-east-1"
+})
+
+const usEastCert = new aws.acm.Certificate("us-cert", {
+    domainName: "*.wernichbekker.com",
+    tags: {
+        Environment: "test",
+    },
+    validationMethod: "DNS",
+}, {
+    provider: usAwsProvider
+});
+
+const s3Distribution = new aws.cloudfront.Distribution("s3Distribution", {
+    origins: [{
+        domainName: bucket.bucketRegionalDomainName,
+        originId: s3OriginId,
+        s3OriginConfig: {
+            originAccessIdentity: s3Oia.cloudfrontAccessIdentityPath,
+        },
+    }],
+    enabled: true,
+    isIpv6Enabled: true,
+    comment: "frontend.wernichbekker.com",
+    defaultRootObject: "index.html",
+    // loggingConfig: {
+    //     includeCookies: false,
+    //     bucket: "mylogs.s3.amazonaws.com",
+    //     prefix: "myprefix",
+    // },
+    aliases: [
+        "frontend.wernichbekker.com",
+    ],
+    defaultCacheBehavior: {
+        allowedMethods: [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "PATCH",
+            "POST",
+            "PUT",
+        ],
+        cachedMethods: [
+            "GET",
+            "HEAD",
+        ],
+        targetOriginId: s3OriginId,
+        forwardedValues: {
+            queryString: false,
+            cookies: {
+                forward: "none",
+            },
+        },
+        viewerProtocolPolicy: "allow-all",
+        minTtl: 0,
+        defaultTtl: 3600,
+        maxTtl: 86400,
+    },
+    orderedCacheBehaviors: [
+        {
+            pathPattern: "/content/immutable/*",
+            allowedMethods: [
+                "GET",
+                "HEAD",
+                "OPTIONS",
+            ],
+            cachedMethods: [
+                "GET",
+                "HEAD",
+                "OPTIONS",
+            ],
+            targetOriginId: s3OriginId,
+            forwardedValues: {
+                queryString: false,
+                headers: ["Origin"],
+                cookies: {
+                    forward: "none",
+                },
+            },
+            minTtl: 0,
+            defaultTtl: 86400,
+            maxTtl: 31536000,
+            compress: true,
+            viewerProtocolPolicy: "redirect-to-https",
+        },
+        {
+            pathPattern: "/content/*",
+            allowedMethods: [
+                "GET",
+                "HEAD",
+                "OPTIONS",
+            ],
+            cachedMethods: [
+                "GET",
+                "HEAD",
+            ],
+            targetOriginId: s3OriginId,
+            forwardedValues: {
+                queryString: false,
+                cookies: {
+                    forward: "none",
+                },
+            },
+            minTtl: 0,
+            defaultTtl: 3600,
+            maxTtl: 86400,
+            compress: true,
+            viewerProtocolPolicy: "redirect-to-https",
+        },
+    ],
+    priceClass: "PriceClass_200",
+    restrictions: {
+        geoRestriction: {
+            restrictionType: "none",
+        },
+    },
+    tags: {
+        Environment: "production",
+    },
+    viewerCertificate: {
+        acmCertificateArn: usEastCert.arn,
+        sslSupportMethod:"sni-only",
+    },
+});
 
