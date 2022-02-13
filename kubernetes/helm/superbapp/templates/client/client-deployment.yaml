@@ -33,7 +33,7 @@ spec:
               containerPort: 80
               hostPort: 4300
               protocol: TCP
-          image: taptap21/superbapp-client:latest
+          image: "taptap21/superbapp-client:{{ .Values.client.containerTag}}"
 
           readinessProbe:
             initialDelaySeconds: 10

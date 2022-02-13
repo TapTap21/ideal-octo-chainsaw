@@ -121,6 +121,8 @@ client:
     host: "client.wernichbekker.com"
     path: "/"
 
+  containerTag: "0.1"
+
 imagePullSecrets: []
 nameOverride: "superbapp"
 fullnameOverride: "superbapp-chart"

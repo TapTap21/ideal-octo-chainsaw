@@ -102,6 +102,8 @@ client:
     host: ""
     path: ""
 
+  containerTag: "latest"
+
 imagePullSecrets: []
 nameOverride: "superbapp"
 fullnameOverride: "superbapp-chart"
