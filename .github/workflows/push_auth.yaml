@@ -1,0 +1,59 @@
+name: frontend-production-build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - src/auth/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/auth
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup node with caching
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+          cache-dependency-path: src/auth/package-lock.json
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Build static files
+        run: |
+          npm run build
+
+      - name: Log in to Docker Hub
+          uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: taptap21/superbapp-auth
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+#      - name: Slack Notification
+#        uses: rtCamp/action-slack-notify@v2.0.2
+#        env:
+#          SITE_NAME: frontend.wernichbekker.com
+#          HOST_NAME: Production
+#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+

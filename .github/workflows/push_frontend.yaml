@@ -3,6 +3,8 @@ name: frontend-production-build
 on:
   push:
     branches: [ main ]
+    paths:
+      - src/client/**
 
 jobs:
   build:
@@ -35,7 +37,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
 
-      - name: Upload US to S3
+      - name: Upload to S3
         env:
           AWS_BUCKET: ${{ secrets.AWS_BUCKET}}
         run: |
