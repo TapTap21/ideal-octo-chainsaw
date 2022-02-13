@@ -22,5 +22,5 @@ spec:
               service:
                 name: {{ include "superbapp.fullname" . }}-client
                 port:
-                  name: client-http
+                  name: client
 {{- end }}
