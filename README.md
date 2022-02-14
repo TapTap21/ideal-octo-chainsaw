@@ -81,6 +81,6 @@ Currently, the ArgoCD setup is only using the rolling release strategy. This is 
 The frontend CI/CD does not support more than the production environment. A simple yet effective solution would be to use generative subdomains to deploy n amount of frontends and prune them when they are not necessary anymore.
 
 ### Kubernetes
-Currently, none of the resources in kubernetes support auto-scaling. The deployments should use HorizontalPodAutoscalers to meet variagle demand. This should be pared with a cluster autoscaler using either native aws nodegroups or a project like the emerging [karpenter](https://karpenter.sh/).
+Currently, none of the resources in kubernetes support auto-scaling. The deployments should use HorizontalPodAutoscalers to meet fragile demand. This should be pared with a cluster autoscaler using either native aws nodegroups or a project like the emerging [karpenter](https://karpenter.sh/).
 
 
